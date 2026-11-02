@@ -4,13 +4,30 @@ class Dados {
   static tentativa = 1
   static pontuacao = 0
 
-  static gabarito051 = new Array('D', 'C', 'B', 'D', 'A')
-  static gabarito052 = new Array('B', 'A', 'B', 'D', 'A')
-  static gabarito053 = new Array('B', 'B', 'B', 'C', 'D')
-  static gabarito054 = new Array('B', 'B', 'D', 'C', 'D')
-  static gabarito055 = new Array('D', 'A', 'A', 'C', 'D')
+  // matriz de gabaritos
 
-  static gabarito = new Array()
+  static gabaritos = [
+    
+    // 151
+    [],
+
+    // 152
+    [],
+
+    // 153
+    [],
+
+    // 154
+    [],
+
+    // 155
+    []
+  ]
+
+  // quando o usuario selecionar um programa, o array do programa vem pra essa variavel
+  
+  static gabaritoProgramaSelecionado = []
+
   static i = 0
 }
 
