@@ -1,9 +1,12 @@
 import Dados from "../Dados"
 import { View, Alert, Button } from "react-native"
-
-// Função que roda quando o usuário começa o jogo
+import { useNavigation } from "@react-navigation/native"
 
 function Start({programa}) {
+
+  // esse objeto navigation serve pra trocar a tela
+  const navigation = useNavigation()
+  
   const iniciar = () => {
 
     // De acordo com o programa que o usuario selecionar, pega um dos gabaritos da matriz e passa pra variavel gabaritoProgramaSelecionado
@@ -34,15 +37,21 @@ function Start({programa}) {
     }
 
     else {
+      
       Alert.alert('Código de programa inválido!\nDigite um código entre 151 e 155!')
+      
+      window.alert('Código de programa inválido!\nDigite um código entre 151 e 155!')
 
       return
     }
+
+    // se o usuario digita um numero certo para o programa, ele atribui as variaveis e troca de tela, comecando o jogo
 
     Dados.programa = programa
     Dados.tentativa = 1
     Dados.pontuacao = 0
     Dados.i = 0
+    navigation.navigate('TelaPergunta')
   }
 
   return(
