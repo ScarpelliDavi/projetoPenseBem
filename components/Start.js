@@ -13,27 +13,27 @@ function Start({programa}) {
 
     if(programa == '151') {
         Dados.gabaritoProgramaSelecionado = Dados.gabaritos[0]
-        Dados.pergunta = 1
+        Dados.numeroPergunta = 0
     }
 
     else if(programa == '152'){
         Dados.gabaritoProgramaSelecionado = Dados.gabaritos[1]
-        Dados.pergunta = 31
+        Dados.numeroPergunta = 30
     }
 
     else if(programa == '153'){
         Dados.gabaritoProgramaSelecionado = Dados.gabaritos[2]
-        Dados.pergunta = 61
+        Dados.numeroPergunta = 60
     }
 
     else if(programa == '154'){
         Dados.gabaritoProgramaSelecionado = Dados.gabaritos[3]
-        Dados.pergunta = 91
+        Dados.numeroPergunta = 90
     }
 
     else if(programa == '155'){
         Dados.gabaritoProgramaSelecionado = Dados.gabaritos[4]
-        Dados.pergunta = 121
+        Dados.numeroPergunta = 120
     }
 
     else {

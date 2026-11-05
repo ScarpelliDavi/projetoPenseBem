@@ -1,6 +1,6 @@
 class Dados {
   static programa = 0
-  static pergunta = 0
+  static numeroPergunta = 0
   static tentativa = 1
   static pontuacao = 0
 
@@ -28,6 +28,8 @@ class Dados {
   
   static gabaritoProgramaSelecionado = []
 
+  // essa variavel serve pra iterar sobre o gabarito
+  
   static i = 0
 }
 
