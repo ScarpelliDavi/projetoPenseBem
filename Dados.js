@@ -9,7 +9,7 @@ class Dados {
   static gabaritos = [
     
     // 151
-    [],
+    [], 
 
     // 152
     [],

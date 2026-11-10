@@ -8,6 +8,8 @@ import Dados from '../Dados'
 
 function TelaPergunta() {
 
+  const [pergunta, setPergunta] = useState(0)
+
   const jogar = (resposta) => {
     if(resposta == Dados.gabaritoProgramaSelecionado[Dados.i]) {
 
@@ -31,7 +33,9 @@ function TelaPergunta() {
         Dados.numeroPergunta++
         Dados.tentativa = 1
       }
-    }   
+    }
+    
+    setPergunta(pergunta + 1)
 
     if(Dados.i == 30) {
       
