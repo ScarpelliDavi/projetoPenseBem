@@ -1,9 +1,18 @@
-import { View } from "react-native"
+import { View, Button } from "react-native"
 
-function Botoes() {
+function Botoes({ jogar }) {
 
   return(
-    <View/>
+
+    <View>
+
+      <Button title="A" onPress={() => jogar('A')}/>
+      <Button title="B" onPress={() => jogar('B')}/>
+      <Button title="C" onPress={() => jogar('C')}/>
+      <Button title="D" onPress={() => jogar('D')}/>
+
+    </View>
+
   )
 }
 
