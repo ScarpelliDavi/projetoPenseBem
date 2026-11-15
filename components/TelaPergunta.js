@@ -62,7 +62,7 @@ function TelaPergunta() {
   return (
     <View style={Styles.principal}>
       <Text style={styleLocal.statusHeader}>
-        Programa {Dados.programa} | Questão {Dados.indiceAtual + 1}/30 | Tentativa: {Dados.tentativa}/3 | Pontos: {Dados.pontuacao}
+        Programa {Dados.programa} | Questão {Dados.indiceAtual + 1}/{Dados.perguntasAtuais.length} | Tentativa: {Dados.tentativa}/3 | Pontos: {Dados.pontuacao}
       </Text>
 
       <Pergunta />
