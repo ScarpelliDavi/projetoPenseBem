@@ -17,7 +17,7 @@ function TelaPergunta() {
     if(!perguntaAtual) return
     
     if(letraEscolhida === perguntaAtual.correta) {
-      if (Dados.tentativa === 1) Dados.pontacao += 3
+      if (Dados.tentativa === 1) Dados.pontuacao += 3
       else if(Dados.tentativa === 2) Dados.pontuacao += 2
       else if(Dados.tentativa === 3) Dados.pontuacao +=1
 
