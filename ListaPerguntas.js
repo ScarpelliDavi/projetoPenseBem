@@ -5,14 +5,14 @@ const ListasPergunta ={
   "151": [
     {
       numero: 1,
-      enunciado: "O período conhecido como (1)............. vai de, aproximadamente, 500 000 a 4 000 anos (2)............. .",
+      enunciado: "O período conhecido como (1)............. vai de, aproximadamente, 500 000 a 4 000 anos (2)............. . → Complete a lacuna (1).",
       imagem: null,
       alternativas: ["Idade Média", "Anos Dourados", "Pré-História", "Pós-Moderno"],
       correta: "C"
     },
     {
       numero: 2,
-      enunciado: "O período conhecido como (1)............. vai de, aproximadamente, 500 000 a 4 000 anos (2)............. .",
+      enunciado: "O período conhecido como Pré-História vai de, aproximadamente, 500 000 a 4 000 anos (2)............. .",
       imagem: null,
       alternativas: ["bissextos", "lunares", "depois da Chuva", "antes de Cristo"],
       correta: "D"
@@ -33,14 +33,14 @@ const ListasPergunta ={
     },
     {
       numero: 5,
-      enunciado: "A Pré-História se divide em dois grandes períodos: (5)............. e (6)............. .",
+      enunciado: "A Pré-História se divide em dois grandes períodos: (5)............. e (6)............. . → Complete a lacuna (5).",
       imagem: null,
       alternativas: ["Paleolítico", "Políptico", "Paleocrítico", "Posterior"],
       correta: "A"
     },
     {
       numero: 6,
-      enunciado: "A Pré-História se divide em dois grandes períodos: (5)............. e (6)............. .",
+      enunciado: "A Pré-História se divide em dois grandes períodos: Paleolítico e (6)............. .",
       imagem: null,
       alternativas: ["Neolítico", "Neologístico", "Anterior", "Neonovo"],
       correta: "A"
@@ -386,14 +386,14 @@ const ListasPergunta ={
     },
     {
       numero: 51,
-      enunciado: "Marte, o planeta (51)............., era considerado pelos (52)............. como o deus da guerra e do poder.",
+      enunciado: "Marte, o planeta (51)............., era considerado pelos (52)............. como o deus da guerra e do poder. → Complete a lacuna (51).",
       imagem: null,
       alternativas: ["amarelo", "vermelho", "azul", "prateado"],
       correta: "B"
     },
     {
       numero: 52,
-      enunciado: "Marte, o planeta (51)............., era considerado pelos (52)............. como o deus da guerra e do poder.",
+      enunciado: "Marte, o planeta vermelho, era considerado pelos (52)............. como o deus da guerra e do poder.",
       imagem: null,
       alternativas: ["gregos e troianos", "gregos e romanos", "egípcios e romanos", "egípcios e troianos"],
       correta: "B"
