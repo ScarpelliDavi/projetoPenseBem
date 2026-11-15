@@ -1,4 +1,4 @@
-const ListaPerguntas ={
+const ListasPergunta ={
   // =========================================================================
   // PROGRAMA 1 (Código 151) | Fichário 1 (Questões 1 a 30: Pré-História)
   // =========================================================================
@@ -1190,4 +1190,4 @@ const ListaPerguntas ={
   ]
 };
 
-export default ListaPerguntas
+export default ListasPergunta
