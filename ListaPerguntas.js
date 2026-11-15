@@ -429,28 +429,28 @@ const ListasPergunta ={
     {
       numero: 57,
       enunciado: "Coloque as partes do quebra-cabeça nos lugares certos. Qual peça encaixa na posição 57?",
-      imagem: null,
+      imagem: require("./assets/perguntas/quebracabeca.jpg"),
       alternativas: ["A", "B", "C", "D"],
       correta: "D"
     },
     {
       numero: 58,
       enunciado: "Coloque as partes do quebra-cabeça nos lugares certos. Qual peça encaixa na posição 58?",
-      imagem: null,
+      imagem: require("./assets/perguntas/quebracabeca.jpg"),
       alternativas: ["B", "A", "D", "C"],
       correta: "D"
     },
     {
       numero: 59,
       enunciado: "Coloque as partes do quebra-cabeça nos lugares certos. Qual peça encaixa na posição 59?",
-      imagem: null,
+      imagem: require("./assets/perguntas/quebracabeca.jpg"),
       alternativas: ["D", "C", "B", "A"],
       correta: "D"
     },
     {
       numero: 60,
       enunciado: "Coloque as partes do quebra-cabeça nos lugares certos. Qual peça encaixa na posição 60?",
-      imagem: null,
+      imagem: require("./assets/perguntas/quebracabeca.jpg"),
       alternativas: ["B", "D", "C", "A"],
       correta: "A"
     }
@@ -896,28 +896,28 @@ const ListasPergunta ={
     {
       numero: 117,
       enunciado: "Descubra a origem de cada desenho.",
-      imagem: null,
+      imagem: require("./assets/perguntas/q117.jpg"),
       alternativas: ["Apache", "Asteca", "Xavante", "Esquimó"],
       correta: "B"
     },
     {
       numero: 118,
       enunciado: "Descubra a origem de cada desenho.",
-      imagem: null,
+      imagem: require("./assets/perguntas/q118.jpg"),
       alternativas: ["Africano", "Japonês", "Croata", "Inca"],
       correta: "D"
     },
     {
       numero: 119,
       enunciado: "Descubra a origem de cada desenho.",
-      imagem: null,
+      imagem: require("./assets/perguntas/q119.jpg"),
       alternativas: ["Maia", "Tolteca", "Hindu", "Egípcio"],
       correta: "D"
     },
     {
       numero: 120,
       enunciado: "Descubra a origem de cada desenho.",
-      imagem: null,
+      imagem: require("./assets/perguntas/q120.jpg"),
       alternativas: ["Grego", "Romano", "Sírio", "Chinês"],
       correta: "A"
     }
@@ -930,42 +930,42 @@ const ListasPergunta ={
     {
       numero: 121,
       enunciado: "O que é A?",
-      imagem: null,
+      imagem: require("./assets/perguntas/egito.jpg"),
       alternativas: ["Triângulo", "Pirâmide", "Castelo", "Estátua"],
       correta: "B"
     },
     {
       numero: 122,
       enunciado: "O que é B?",
-      imagem: null,
+      imagem: require("./assets/perguntas/egito.jpg"),
       alternativas: ["Câmara da princesa", "Quarto de dormir", "Sala de jantar", "Câmara do faraó"],
       correta: "D"
     },
     {
       numero: 123,
       enunciado: "O que é C?",
-      imagem: null,
+      imagem: require("./assets/perguntas/egito.jpg"),
       alternativas: ["Sarcófago", "Fargósaco", "Sarfágoco", "Gorsáfaco"],
       correta: "A"
     },
     {
       numero: 124,
       enunciado: "O que é D?",
-      imagem: null,
+      imagem: require("./assets/perguntas/egito.jpg"),
       alternativas: ["Fantasma", "Múmia", "Defunto", "Boneco"],
       correta: "B"
     },
     {
       numero: 125,
       enunciado: "O que é E?",
-      imagem: null,
+      imagem: require("./assets/perguntas/egito.jpg"),
       alternativas: ["Letras cuneiformes", "Ideogramas", "Desenhinhos", "Hieroglifos"],
       correta: "D"
     },
     {
       numero: 126,
       enunciado: "O que é F?",
-      imagem: null,
+      imagem: require("./assets/perguntas/egito.jpg"),
       alternativas: ["Esfinge", "Estátua", "Monumento", "Mausoléu"],
       correta: "A"
     },
@@ -1162,28 +1162,28 @@ const ListasPergunta ={
     {
       numero: 147,
       enunciado: "Identifique o tipo de relógio pelo desenho.",
-      imagem: null,
+      imagem: require("./assets/perguntas/q147.jpg"),
       alternativas: ["Funil", "Vidrinho", "Conta-gotas", "Ampulheta"],
       correta: "D"
     },
     {
       numero: 148,
       enunciado: "Identifique o tipo de relógio pelo desenho.",
-      imagem: null,
+      imagem: require("./assets/perguntas/q148.jpg"),
       alternativas: ["Relógio de som", "Relógio de chuva", "Relógio de sol", "Relógio de nuvem"],
       correta: "C"
     },
     {
       numero: 149,
       enunciado: "Identifique o tipo de relógio pelo desenho.",
-      imagem: null,
+      imagem: require("./assets/perguntas/q149.jpg"),
       alternativas: ["Relógio de pêndulo", "Vela", "Despertador", "Relógio de pulso"],
       correta: "A"
     },
     {
       numero: 150,
       enunciado: "Identifique o tipo de relógio pelo desenho.",
-      imagem: null,
+      imagem: require("./assets/perguntas/q150.jpg"),
       alternativas: ["Cripta", "Clepsidra", "Cidra", "Quartzo"],
       correta: "B"
     }
