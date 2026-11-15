@@ -11,23 +11,29 @@ function TelaPergunta() {
 
   const [, forcarAtualizacao] = useState(0)
   const navigation = useNavigation()
+  const [mensagem, setMensagem] = useState('')
 
   const jogar = (letraEscolhida) => {
     const perguntaAtual = Dados.perguntasAtuais[Dados.indiceAtual]
     if(!perguntaAtual) return
 
     if(letraEscolhida === perguntaAtual.correta) {
-      if (Dados.tentativa === 1) Dados.pontuacao += 3
-      else if(Dados.tentativa === 2) Dados.pontuacao += 2
-      else if(Dados.tentativa === 3) Dados.pontuacao += 1
+      let pontosGanhos = 0
+      if (Dados.tentativa === 1) pontosGanhos = 3
+      else if(Dados.tentativa === 2) pontosGanhos = 2
+      else if(Dados.tentativa === 3) pontosGanhos = 1
 
+      Dados.pontuacao += pontosGanhos
+      setMensagem(`Certo! +${pontosGanhos} pontos na questão ${perguntaAtual.numero}.`)
       avancarPergunta()
     } else {
       Dados.tentativa++
 
       if (Dados.tentativa > 3) {
+        setMensagem(`Errou as 3 tentativas. A resposta da questão ${perguntaAtual.numero} era ${perguntaAtual.correta}.`)
         avancarPergunta()
       } else {
+        setMensagem("Errado! Tente de novo.")
         forcarAtualizacao((n) => n + 1)
       }
     }
@@ -61,6 +67,8 @@ function TelaPergunta() {
 
       <Pergunta />
 
+      {mensagem !== '' && <Text style={styleLocal.mensagem}>{mensagem}</Text>}
+
       <Botoes jogar={jogar} />
     </View>
   );
@@ -78,6 +86,12 @@ const styleLocal = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     marginVertical: 20,
+  },
+  mensagem: {
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginVertical: 8,
   },
 });
 
