@@ -6,6 +6,7 @@ import Botoes from './Botoes'
 import Pergunta from './Pergunta'
 import Dados from '../Dados'
 
+const MOSTRAR_PERGUNTA = false
 
 function TelaPergunta() {
 
@@ -62,10 +63,10 @@ function TelaPergunta() {
   return (
     <View style={Styles.principal}>
       <Text style={styleLocal.statusHeader}>
-        Programa {Dados.programa} | Questão {Dados.indiceAtual + 1}/{Dados.perguntasAtuais.length} | Tentativa: {Dados.tentativa}/3 | Pontos: {Dados.pontuacao}
+        Programa {Dados.programa} | Questão {Dados.indiceAtual + 1}/{Dados.perguntasAtuais.length} (nº {Dados.perguntasAtuais[Dados.indiceAtual].numero} do livro) | Tentativa: {Dados.tentativa}/3 | Pontos: {Dados.pontuacao}
       </Text>
 
-      <Pergunta />
+      {MOSTRAR_PERGUNTA && <Pergunta />}
 
       {mensagem !== '' && <Text style={styleLocal.mensagem}>{mensagem}</Text>}
 
