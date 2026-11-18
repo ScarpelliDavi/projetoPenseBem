@@ -283,7 +283,7 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
       )}
 
       {/* Botão para abrir o modo livro */}
-      {!animando && codigoLivro === null && (
+      {!animando && (
 
         <Pressable
           onPress={abrirLivro}

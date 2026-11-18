@@ -11,6 +11,21 @@ const Styles = StyleSheet.create({
     backgroundColor: '#f6b51d'
   },
 
+  patternBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: -1,
+  },
+
+  pattern: {
+    width: 1080,
+    height: 790,
+    opacity: 0.07,
+  },
+
   logo: {
     width: 190,
     height: 87,
