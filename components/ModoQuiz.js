@@ -8,67 +8,53 @@ import ListasPergunta from '../ListaPerguntas';
 
 function ModoQuiz({ codigoLivro, onAbrirLivro }) {
 
+  const [modoQuiz, setModoQuiz] = useState('NoBookSelected');
   const [animando, setAnimando] = useState(false);
 
-  // Controle das perguntas
   const [indicePergunta, setIndicePergunta] = useState(0);
-
-  // Controle das tentativas
   const [tentativas, setTentativas] = useState(0);
-
-  // Controle das animações
   const [animacaoResposta, setAnimacaoResposta] = useState(null);
-
-  // Controle da pontuação
   const [pontuacao, setPontuacao] = useState(0);
-
-  // Finalização do Quiz
   const [quizFinalizado, setQuizFinalizado] = useState(false);
 
-  // Player ABC para Livro
   const player = useVideoPlayer(
     require('../assets/animations/ABCtoBook.webm'),
-    (player) => {
+    player => {
       player.loop = false;
       player.muted = false;
     }
   );
 
-  // Player de resposta errada
   const playerWrong = useVideoPlayer(
     require('../assets/animations/WrongAnswer.webm'),
-    (player) => {
+    player => {
       player.loop = false;
       player.muted = false;
     }
   );
 
-  // Player de todas as respostas erradas
   const playerAllWrong = useVideoPlayer(
     require('../assets/animations/AllAnswersWrong.webm'),
-    (player) => {
+    player => {
       player.loop = false;
       player.muted = false;
     }
   );
 
-  // Player de resposta correta
   const playerRight = useVideoPlayer(
     require('../assets/animations/RightAnswer.webm'),
-    (player) => {
+    player => {
       player.loop = false;
       player.muted = false;
     }
   );
 
-  // Perguntas do livro selecionado
-  const perguntas = codigoLivro !== null
+  const perguntas = codigoLivro != null
     ? ListasPergunta[String(codigoLivro)]
     : null;
 
   const perguntaAtual = perguntas?.[indicePergunta];
 
-  // Identificar player da animação atual
   const playerAnimacao =
     animacaoResposta === 'errada'
       ? playerWrong
@@ -78,20 +64,31 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
           ? playerRight
           : null;
 
-  // Detectar término da animação ABC
+  // FINAL ABC TO BOOK
+
   useEffect(() => {
 
-    const subscription = player.addListener('playToEnd', () => {
-      setAnimando(false);
-      onAbrirLivro();
-    });
+    const subscription = player.addListener(
+      'playToEnd',
+      () => {
+        setAnimando(false);
+        onAbrirLivro?.();
+      }
+    );
 
     return () => subscription.remove();
 
   }, [player, onAbrirLivro]);
 
-  // Reiniciar Quiz quando selecionar outro livro
+  // RECEBER LIVRO
+
   useEffect(() => {
+
+    if (codigoLivro == null) {
+      setModoQuiz('NoBookSelected');
+    } else {
+      setModoQuiz('Quiz');
+    }
 
     setIndicePergunta(0);
     setTentativas(0);
@@ -101,28 +98,25 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
 
   }, [codigoLivro]);
 
-  // Abrir livro
+  // ABRIR LIVRO
+
   function abrirLivro() {
 
-    if (animando) return;
+    if (animando || animacaoResposta !== null) return;
+
+    setAnimando(true);
 
     player.pause();
     player.currentTime = 0;
     player.play();
 
-    setAnimando(true);
   }
 
-  // Iniciar animação de resposta
+  // EXECUTAR ANIMAÇÃO
+
   function executarAnimacao(tipo) {
 
-    const players = [
-      playerWrong,
-      playerAllWrong,
-      playerRight
-    ];
-
-    players.forEach(p => {
+    [playerWrong, playerAllWrong, playerRight].forEach(p => {
       p.pause();
       p.currentTime = 0;
     });
@@ -130,86 +124,76 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
     setAnimacaoResposta(tipo);
   }
 
-  // Autoplay das animações de resposta
+  // AUTOPLAY
+
   useEffect(() => {
 
-    if (animacaoResposta === null || !playerAnimacao) return;
+    if (!animacaoResposta || !playerAnimacao) return;
 
     async function iniciarAnimacao() {
-
       try {
         playerAnimacao.pause();
         playerAnimacao.currentTime = 0;
-
         await playerAnimacao.play();
-
       } catch (error) {
         console.log('Erro ao iniciar animação:', error);
       }
-
     }
 
     iniciarAnimacao();
 
   }, [animacaoResposta, playerAnimacao]);
 
-  // Avançar pergunta
+  // AVANÇAR PERGUNTA
+
   function avancarPergunta() {
 
-    if (indicePergunta < perguntas.length - 1) {
+    if (!perguntas) return;
 
+    if (indicePergunta < perguntas.length - 1) {
       setIndicePergunta(atual => atual + 1);
       setTentativas(0);
-
     } else {
-
       setQuizFinalizado(true);
-
     }
 
     setAnimacaoResposta(null);
   }
 
-  // Selecionar resposta
+  // SELECIONAR RESPOSTA
+
   function selecionarResposta(letra) {
 
     if (
+      modoQuiz !== 'Quiz' ||
       !perguntaAtual ||
       animacaoResposta !== null ||
-      quizFinalizado
-    ) {
-      return;
-    }
+      quizFinalizado ||
+      animando
+    ) return;
 
     const novasTentativas = tentativas + 1;
-
     setTentativas(novasTentativas);
 
-    // Resposta correta
     if (letra === perguntaAtual.correta) {
 
       const pontos = 4 - novasTentativas;
-
       setPontuacao(atual => atual + pontos);
 
       executarAnimacao('correta');
-
       return;
     }
 
-    // Terceiro erro
     if (novasTentativas >= 3) {
-
       executarAnimacao('todasErradas');
-
       return;
     }
 
-    // Primeiro ou segundo erro
     executarAnimacao('errada');
   }
 
-  // Detectar término das animações de resposta
+  // FINAL DAS ANIMAÇÕES
+
   useEffect(() => {
 
     if (!animacaoResposta || !playerAnimacao) return;
@@ -232,18 +216,15 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
 
     return () => subscription.remove();
 
-  }, [
-    animacaoResposta,
-    playerAnimacao,
-    indicePergunta,
-    perguntas
-  ]);
+  }, [animacaoResposta, playerAnimacao, indicePergunta, perguntas]);
 
-  // Verificar se o Quiz está ativo
+  const noBookSelected = modoQuiz === 'NoBookSelected';
+
   const quizAtivo =
+    modoQuiz === 'Quiz' &&
     !animando &&
     animacaoResposta === null &&
-    codigoLivro !== null &&
+    codigoLivro != null &&
     perguntaAtual &&
     !quizFinalizado;
 
@@ -251,7 +232,6 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
 
     <View style={[Styles.penseBem, { position: 'relative' }]}>
 
-      {/* Animação ABC para Livro */}
       <VideoView
         player={player}
         style={[
@@ -266,89 +246,53 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
         allowsFullscreen={false}
       />
 
-      {/* Imagem do computador */}
       {!animando && animacaoResposta === null && (
-
         <Image
           source={
-            codigoLivro !== null
-              ? require('../assets/PBStill.png')
-              : require('../assets/PBStillSmile.png')
+            noBookSelected
+              ? require('../assets/PBStillSmile.png')
+              : require('../assets/PBStill.png')
           }
           style={Styles.computer}
           resizeMode="contain"
           fadeDuration={0}
         />
-
       )}
 
-      {/* Botão para abrir o modo livro */}
-      {!animando && (
-
+      {!animando && animacaoResposta === null && (
         <Pressable
           onPress={abrirLivro}
           style={Styles.bookButton}
         />
-
       )}
 
-      {/* Elementos do Quiz */}
       {quizAtivo && (
-
         <>
 
-          {/* Visor */}
           <View style={Styles.quizVisor}>
-
             <Text style={Styles.numPergunta}>
               {perguntaAtual.numero}
             </Text>
-
           </View>
 
-          {/* Botão A */}
-          <Pressable
-            onPress={() => selecionarResposta('A')}
-            style={Styles.buttonA}
-          />
+          <Pressable onPress={() => selecionarResposta('A')} style={Styles.buttonA} />
+          <Pressable onPress={() => selecionarResposta('B')} style={Styles.buttonB} />
+          <Pressable onPress={() => selecionarResposta('C')} style={Styles.buttonC} />
+          <Pressable onPress={() => selecionarResposta('D')} style={Styles.buttonD} />
 
-          {/* Botão B */}
-          <Pressable
-            onPress={() => selecionarResposta('B')}
-            style={Styles.buttonB}
-          />
-
-          {/* Botão C */}
-          <Pressable
-            onPress={() => selecionarResposta('C')}
-            style={Styles.buttonC}
-          />
-
-          {/* Botão D */}
-          <Pressable
-            onPress={() => selecionarResposta('D')}
-            style={Styles.buttonD}
-          />
-
-          {/* Contador de tentativas */}
           <Text style={Styles.contadorErros}>
             {tentativas + 1}
           </Text>
 
-          {/* Pontuação acumulada */}
           <Text style={Styles.pontuacao}>
             {pontuacao}
           </Text>
 
         </>
-
       )}
 
-      {/* Animações de resposta */}
       {animacaoResposta !== null && (
-
         <View style={Styles.computer}>
-
           <VideoView
             key={animacaoResposta}
             player={playerAnimacao}
@@ -357,16 +301,11 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
             nativeControls={false}
             allowsFullscreen={false}
           />
-
         </View>
-
       )}
 
-      {/* Final do Quiz */}
       {quizFinalizado && (
-
         <View style={Styles.quizContainer}>
-
           <Text style={Styles.numeroPergunta}>
             PARABÉNS!
           </Text>
@@ -374,9 +313,7 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
           <Text style={Styles.pontuacaoFinal}>
             Pontuação: {pontuacao}
           </Text>
-
         </View>
-
       )}
 
     </View>

@@ -1,42 +1,125 @@
-import React, { useState, useEffect, useRef } from 'react';
+
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
+
 import { View } from 'react-native';
 
 import ModoQuiz from './ModoQuiz';
 import ModoLivro from './ModoLivro';
 import ModoSuspenso from './ModoSuspenso';
 
-function PenseBemJr() {
+function PenseBemJr({
+  onTransicaoIniciada,
+  onBookAnimationEnd,
+  cutsceneFinalizada,
+}) {
+
+  // =================================
+  // ESTADOS PRINCIPAIS
+  // =================================
+
   const [modo, setModo] = useState('quiz');
+
   const [codigoLivro, setCodigoLivro] = useState(null);
+  const [codigoPendente, setCodigoPendente] = useState(null);
 
-  // Controlar a visibilidade do modo atual
   const [computadorSuspenso, setComputadorSuspenso] = useState(false);
+  const [transicaoAtiva, setTransicaoAtiva] = useState(false);
 
-  const estavaSuspenso = useRef(false);
+  // =================================
+  // ABRIR MODO LIVRO
+  // =================================
+
+  const abrirModoLivro = useCallback(() => {
+
+    if (transicaoAtiva) return;
+
+    setModo('livro');
+
+  }, [transicaoAtiva]);
+
+  // =================================
+  // INICIAR TRANSIÇÃO
+  // =================================
+
+  const iniciarTransicao = useCallback(() => {
+
+    setTransicaoAtiva(true);
+
+    onTransicaoIniciada?.();
+
+  }, [onTransicaoIniciada]);
+
+  // =================================
+  // LIVRO SELECIONADO
+  // =================================
+
+  const finalizarAnimacaoLivro = useCallback((codigo) => {
+
+    setCodigoPendente(String(codigo));
+
+    onBookAnimationEnd?.();
+
+  }, [onBookAnimationEnd]);
+
+  // =================================
+  // CUTSCENE FINALIZADA
+  // =================================
 
   useEffect(() => {
-    if (estavaSuspenso.current && !computadorSuspenso) {
-      setCodigoLivro(null);
-      setModo('quiz');
-    }
-    estavaSuspenso.current = computadorSuspenso;
-  }, [computadorSuspenso]);
 
-  // Abrir modo de seleção de livro
-  function abrirModoLivro() {
-    setModo('livro');
-  }
+    if (
+      !cutsceneFinalizada ||
+      codigoPendente === null
+    ) return;
 
-  // Retornar ao quiz com o livro selecionado
-  function iniciarQuiz(codigo) {
-    setCodigoLivro(codigo);
+    setCodigoLivro(codigoPendente);
+    setCodigoPendente(null);
+
     setModo('quiz');
-  }
+
+    setTransicaoAtiva(false);
+
+  }, [cutsceneFinalizada, codigoPendente]);
+
+  // =================================
+  // RETORNAR AO QUIZ SEM LIVRO
+  // =================================
+
+  const voltarParaQuiz = useCallback(() => {
+
+    setCodigoLivro(null);
+    setCodigoPendente(null);
+
+    setModo('quiz');
+
+    setTransicaoAtiva(false);
+
+  }, []);
+
+  // =================================
+  // SUSPENSÃO
+  // =================================
+
+  const atualizarSuspensao = useCallback((suspenso) => {
+
+    setComputadorSuspenso(suspenso);
+
+  }, []);
+
+  // =================================
+  // INTERFACE
+  // =================================
 
   return (
+
     <View style={{ flex: 1, position: 'relative' }}>
 
-      {/* Modos principais */}
+      {/* MODOS PRINCIPAIS */}
+
       <View
         style={{
           flex: 1,
@@ -44,31 +127,39 @@ function PenseBemJr() {
         }}
       >
 
-        {/* Modo Quiz */}
         {modo === 'quiz' && (
+
           <ModoQuiz
             codigoLivro={codigoLivro}
             onAbrirLivro={abrirModoLivro}
           />
+
         )}
 
-        {/* Modo Livro */}
         {modo === 'livro' && (
+
           <ModoLivro
-            onLivroSelecionado={iniciarQuiz}
+            onTransicaoIniciada={iniciarTransicao}
+            onLivroSelecionado={finalizarAnimacaoLivro}
+            onVoltarQuiz={voltarParaQuiz}
           />
+
         )}
 
       </View>
 
-      {/* Sistema de suspensão */}
+      {/* SISTEMA DE SUSPENSÃO */}
+
       <ModoSuspenso
         modo={modo}
-        onEstadoChange={setComputadorSuspenso}
+        onEstadoChange={atualizarSuspensao}
+        bloqueado={transicaoAtiva}
       />
 
     </View>
+
   );
+
 }
 
 export default PenseBemJr;

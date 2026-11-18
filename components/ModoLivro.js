@@ -7,101 +7,170 @@ import { useFonts } from 'expo-font';
 import Styles from '../Styles';
 import ListasPergunta from '../ListaPerguntas';
 
-function ModoLivro({ onLivroSelecionado }) {
+function ModoLivro({
+  onTransicaoIniciada,
+  onLivroSelecionado,
+  onVoltarQuiz,
+}) {
+
+  // =================================
+  // FONTES
+  // =================================
 
   const [fontsLoaded] = useFonts({
     Digital: require('../assets/fonts/digital-7 (mono).ttf'),
   });
 
-  const [finalizada] = useState(true);
+  // =================================
+  // ESTADOS
+  // =================================
 
-  const [animandoVolta, setAnimandoVolta] = useState(false);
-  const [animandoErro, setAnimandoErro] = useState(false);
+  const [estado, setEstado] = useState('NoBookSelected');
 
   const [numeroDigitado, setNumeroDigitado] = useState('');
   const [livroSelecionado, setLivroSelecionado] = useState(false);
-
   const [codigoConfirmado, setCodigoConfirmado] = useState(null);
 
-  // Player Livro para ABC
-  const playerVolta = useVideoPlayer(
-    require('../assets/animations/BooktoABC.webm'),
-    (player) => {
+  // =================================
+  // PLAYER BOOKFOUND
+  // =================================
+
+  const playerBookFound = useVideoPlayer(
+    require('../assets/animations/BookFound.webm'),
+    player => {
       player.loop = false;
       player.muted = false;
     }
   );
 
-  // Player de código inexistente
+  // =================================
+  // PLAYER BOOKTOABC
+  // =================================
+
+  const playerBookToABC = useVideoPlayer(
+    require('../assets/animations/BooktoABC.webm'),
+    player => {
+      player.loop = false;
+      player.muted = false;
+    }
+  );
+
+  // =================================
+  // PLAYER WHATBOOK
+  // =================================
+
   const playerErro = useVideoPlayer(
     require('../assets/animations/WhatBook.webm'),
-    (player) => {
+    player => {
       player.loop = false;
       player.muted = false;
     }
   );
 
-  // Detectar término da animação Livro para ABC
+  // =================================
+  // FINAL BOOKFOUND
+  // =================================
+
   useEffect(() => {
-    const subscription = playerVolta.addListener('playToEnd', () => {
 
-      setAnimandoVolta(false);
-      setLivroSelecionado(false);
-      setNumeroDigitado('');
+    const subscription = playerBookFound.addListener(
+      'playToEnd',
+      () => {
 
-      if (codigoConfirmado !== null) {
-        onLivroSelecionado(codigoConfirmado);
+        if (codigoConfirmado !== null) {
+          onLivroSelecionado?.(codigoConfirmado);
+        }
+
       }
-
-    });
+    );
 
     return () => subscription.remove();
-  }, [playerVolta, codigoConfirmado, onLivroSelecionado]);
 
-  // Detectar término da animação WhatBook
+  }, [playerBookFound, codigoConfirmado, onLivroSelecionado]);
+
+  // =================================
+  // FINAL BOOKTOABC
+  // =================================
+
   useEffect(() => {
-    const subscription = playerErro.addListener('playToEnd', () => {
 
-      setAnimandoErro(false);
+    const subscription = playerBookToABC.addListener(
+      'playToEnd',
+      () => {
 
-      // Limpar o visor somente após a animação terminar
-      setNumeroDigitado('');
+        setNumeroDigitado('');
+        setLivroSelecionado(false);
+        setCodigoConfirmado(null);
+        setEstado('NoBookSelected');
 
-      // Voltar à imagem inicial
-      setLivroSelecionado(false);
+        // RETORNAR AO MODOQUIZ
+        onVoltarQuiz?.();
 
-    });
+      }
+    );
 
     return () => subscription.remove();
+
+  }, [playerBookToABC, onVoltarQuiz]);
+
+  // =================================
+  // FINAL WHATBOOK
+  // =================================
+
+  useEffect(() => {
+
+    const subscription = playerErro.addListener(
+      'playToEnd',
+      () => {
+
+        setEstado('NoBookSelected');
+        setNumeroDigitado('');
+        setLivroSelecionado(false);
+
+      }
+    );
+
+    return () => subscription.remove();
+
   }, [playerErro]);
 
-  // Adicionar número ao visor
+  // =================================
+  // EXECUTAR BOOKTOABC
+  // =================================
+
+  function executarBookToABC() {
+
+    if (estado !== 'NoBookSelected') return;
+
+    setEstado('BookToABC');
+
+    playerBookToABC.pause();
+    playerBookToABC.currentTime = 0;
+    playerBookToABC.play();
+
+  }
+
+  // =================================
+  // ADICIONAR NÚMERO
+  // =================================
+
   function adicionarNumero(numero) {
+
     if (
       numeroDigitado.length >= 3 ||
-      animandoVolta ||
-      animandoErro ||
-      codigoConfirmado !== null
+      estado !== 'NoBookSelected'
     ) return;
 
     setLivroSelecionado(true);
 
-    setNumeroDigitado((atual) => atual + numero);
+    setNumeroDigitado(atual => atual + numero);
+
   }
 
-  // Limpar visor
-  function limparVisor() {
-    if (
-      animandoVolta ||
-      animandoErro ||
-      codigoConfirmado !== null
-    ) return;
+  // =================================
+  // VERIFICAR RESPOSTA
+  // =================================
 
-    setNumeroDigitado('');
-    setLivroSelecionado(false);
-  }
-
-  // Verificar código digitado
   function verificarResposta(numero) {
 
     const perguntaExiste = Object.prototype.hasOwnProperty.call(
@@ -111,52 +180,67 @@ function ModoLivro({ onLivroSelecionado }) {
 
     if (perguntaExiste) {
 
-      console.log('Livro encontrado:', numero);
-
       setCodigoConfirmado(numero);
+      setEstado('BookFound');
 
-      playerVolta.pause();
-      playerVolta.currentTime = 0;
-      playerVolta.play();
+      onTransicaoIniciada?.();
 
-      setAnimandoVolta(true);
+      playerBookFound.pause();
+      playerBookFound.currentTime = 0;
+      playerBookFound.play();
 
     } else {
 
-      console.log('Livro não encontrado:', numero);
+      setEstado('WhatBook');
 
-      // Iniciar animação WhatBook
       playerErro.pause();
       playerErro.currentTime = 0;
       playerErro.play();
 
-      setAnimandoErro(true);
     }
+
   }
 
-  // Botão ENTER
+  // =================================
+  // ENTER
+  // =================================
+
   function pressionarEnter() {
+
     if (
       numeroDigitado.length !== 3 ||
-      animandoVolta ||
-      animandoErro ||
-      codigoConfirmado !== null
+      estado !== 'NoBookSelected'
     ) return;
 
     verificarResposta(numeroDigitado);
+
   }
 
+  // =================================
+  // ESTADOS DAS ANIMAÇÕES
+  // =================================
+
+  const animandoBookToABC = estado === 'BookToABC';
+  const animandoBookFound = estado === 'BookFound';
+  const animandoErro = estado === 'WhatBook';
+
+  // =================================
+  // INTERFACE
+  // =================================
+
   return (
+
     <View style={[Styles.penseBem, { position: 'relative' }]}>
 
-      {/* Animação Livro para ABC */}
+      {/* BOOKTOABC */}
+
       <VideoView
-        player={playerVolta}
+        player={playerBookToABC}
         style={[
           Styles.computerAnim,
           {
-            opacity: animandoVolta ? 1 : 0,
-            position: animandoVolta ? 'relative' : 'absolute',
+            opacity: animandoBookToABC ? 1 : 0,
+            position: animandoBookToABC ? 'relative' : 'absolute',
           }
         ]}
         contentFit="contain"
@@ -164,7 +248,24 @@ function ModoLivro({ onLivroSelecionado }) {
         allowsFullscreen={false}
       />
 
-      {/* Animação de código inexistente */}
+      {/* BOOKFOUND */}
+
+      <VideoView
+        player={playerBookFound}
+        style={[
+          Styles.computerAnim,
+          {
+            opacity: animandoBookFound ? 1 : 0,
+            position: animandoBookFound ? 'relative' : 'absolute',
+          }
+        ]}
+        contentFit="contain"
+        nativeControls={false}
+        allowsFullscreen={false}
+      />
+
+      {/* WHATBOOK */}
+
       <VideoView
         player={playerErro}
         style={[
@@ -179,8 +280,12 @@ function ModoLivro({ onLivroSelecionado }) {
         allowsFullscreen={false}
       />
 
-      {/* Imagens do computador */}
-      {!animandoVolta && !animandoErro && (
+      {/* COMPUTADOR */}
+
+      {!animandoBookToABC &&
+       !animandoBookFound &&
+       !animandoErro && (
+
         <Image
           source={
             livroSelecionado
@@ -191,19 +296,32 @@ function ModoLivro({ onLivroSelecionado }) {
           resizeMode="contain"
           fadeDuration={0}
         />
+
       )}
 
-      {/* Visor e teclado */}
-      {finalizada && !animandoVolta && !animandoErro && (
+      {/* PRESSABLE INVISÍVEL BOOKTOABC */}
+
+      {estado === 'NoBookSelected' && (
+
+        <Pressable
+          style={Styles.quizButton}
+          onPress={executarBookToABC}
+        />
+
+      )}
+
+      {/* VISOR E TECLADO */}
+
+      {estado === 'NoBookSelected' && (
+
         <>
-          {/* Visor */}
+
           <View style={Styles.visorBook}>
             <Text style={Styles.textVisorBook}>
               {numeroDigitado}
             </Text>
           </View>
 
-          {/* Teclado numérico */}
           <Pressable style={Styles.num1} onPress={() => adicionarNumero('1')} />
           <Pressable style={Styles.num2} onPress={() => adicionarNumero('2')} />
           <Pressable style={Styles.num3} onPress={() => adicionarNumero('3')} />
@@ -215,16 +333,19 @@ function ModoLivro({ onLivroSelecionado }) {
           <Pressable style={Styles.num9} onPress={() => adicionarNumero('9')} />
           <Pressable style={Styles.num0} onPress={() => adicionarNumero('0')} />
 
-          {/* Botão ENTER */}
           <Pressable
             style={Styles.enter1}
             onPress={pressionarEnter}
           />
+
         </>
+
       )}
 
     </View>
+
   );
+
 }
 
 export default ModoLivro;

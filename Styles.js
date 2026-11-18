@@ -39,7 +39,7 @@ const Styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 30,
     position: 'absolute',
-    top: -20,
+    top: -30,
     zIndex: 1
   },
 
@@ -110,6 +110,15 @@ const Styles = StyleSheet.create({
     marginTop: 3,
     marginBottom: 3,
     top: 54
+  },
+  quizButton: {
+    position: 'absolute',
+    width: 21,
+    height: 21,
+    top: 349,
+    left: 45,
+    zIndex: 10,
+    backgroundColor: 'transparent',
   },
 
   visorBook: {

@@ -1,18 +1,33 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, Pressable, Platform } from 'react-native';
-import { VideoView, useVideoPlayer } from 'expo-video';
+
+import {
+  View,
+  Pressable,
+  Platform,
+} from 'react-native';
+
+import {
+  VideoView,
+  useVideoPlayer,
+} from 'expo-video';
 
 import Styles from '../Styles';
 
-function ModoSuspenso({ modo, onEstadoChange }) {
+function ModoSuspenso({
+  modo,
+  onEstadoChange,
+  bloqueado = false,
+}) {
 
   const [estado, setEstado] = useState('ligado');
 
-  // Detectar sistema operacional
+  // =================================
+  // SISTEMA OPERACIONAL
+  // =================================
+
   const isIOS = Platform.OS === 'ios';
 
-  // Selecionar animações conforme o sistema
   const animations = isIOS
     ? {
         goingABC: require('../assets/animations/iOS/GoingSleepABC.mov'),
@@ -33,10 +48,13 @@ function ModoSuspenso({ modo, onEstadoChange }) {
         wakingBook: require('../assets/animations/Android/WakingUpBook.webm'),
       };
 
-  // Players do ModoQuiz
+  // =================================
+  // PLAYERS QUIZ
+  // =================================
+
   const goingABC = useVideoPlayer(
     animations.goingABC,
-    (player) => {
+    player => {
       player.loop = false;
       player.muted = false;
     }
@@ -44,7 +62,7 @@ function ModoSuspenso({ modo, onEstadoChange }) {
 
   const sleepingABC = useVideoPlayer(
     animations.sleepingABC,
-    (player) => {
+    player => {
       player.loop = true;
       player.muted = false;
     }
@@ -52,16 +70,19 @@ function ModoSuspenso({ modo, onEstadoChange }) {
 
   const wakingABC = useVideoPlayer(
     animations.wakingABC,
-    (player) => {
+    player => {
       player.loop = false;
       player.muted = false;
     }
   );
 
-  // Players do ModoLivro
+  // =================================
+  // PLAYERS LIVRO
+  // =================================
+
   const goingBook = useVideoPlayer(
     animations.goingBook,
-    (player) => {
+    player => {
       player.loop = false;
       player.muted = false;
     }
@@ -69,7 +90,7 @@ function ModoSuspenso({ modo, onEstadoChange }) {
 
   const sleepingBook = useVideoPlayer(
     animations.sleepingBook,
-    (player) => {
+    player => {
       player.loop = true;
       player.muted = false;
     }
@@ -77,13 +98,16 @@ function ModoSuspenso({ modo, onEstadoChange }) {
 
   const wakingBook = useVideoPlayer(
     animations.wakingBook,
-    (player) => {
+    player => {
       player.loop = false;
       player.muted = false;
     }
   );
 
-  // Identificar os players do modo atual
+  // =================================
+  // SELECIONAR PLAYERS
+  // =================================
+
   const playerGoing = modo === 'quiz'
     ? goingABC
     : goingBook;
@@ -96,7 +120,10 @@ function ModoSuspenso({ modo, onEstadoChange }) {
     ? wakingABC
     : wakingBook;
 
-  // Estilos dos botões
+  // =================================
+  // BOTÕES
+  // =================================
+
   const estiloBotaoDesligar = modo === 'quiz'
     ? Styles.onOffButton
     : Styles.onOffButtonLivro;
@@ -105,58 +132,79 @@ function ModoSuspenso({ modo, onEstadoChange }) {
     ? Styles.onOffB2
     : Styles.onOffB2Livro;
 
-  // Avisar ao componente principal se está suspenso
+  // =================================
+  // COMUNICAR ESTADO
+  // =================================
+
   useEffect(() => {
-    onEstadoChange(estado !== 'ligado');
+
+    onEstadoChange?.(estado !== 'ligado');
+
   }, [estado, onEstadoChange]);
 
-  // Iniciar automaticamente a animação correspondente
+  // =================================
+  // EXECUTAR ANIMAÇÕES
+  // =================================
+
   useEffect(() => {
 
     if (estado === 'dormindo') {
+
       playerGoing.pause();
       playerGoing.currentTime = 0;
       playerGoing.play();
+
     }
 
     if (estado === 'suspenso') {
+
       playerSleeping.pause();
       playerSleeping.currentTime = 0;
       playerSleeping.play();
+
     }
 
     if (estado === 'acordando') {
+
       playerSleeping.pause();
 
       playerWaking.pause();
       playerWaking.currentTime = 0;
       playerWaking.play();
+
     }
 
   }, [estado, modo]);
 
-  // Detectar término das animações de desligamento
+  // =================================
+  // FINAL DO DESLIGAMENTO
+  // =================================
+
   useEffect(() => {
 
     const subscriptionABC = goingABC.addListener(
       'playToEnd',
       () => {
+
         if (modo !== 'quiz') return;
 
-        setEstado((atual) =>
+        setEstado(atual =>
           atual === 'dormindo' ? 'suspenso' : atual
         );
+
       }
     );
 
     const subscriptionBook = goingBook.addListener(
       'playToEnd',
       () => {
+
         if (modo !== 'livro') return;
 
-        setEstado((atual) =>
+        setEstado(atual =>
           atual === 'dormindo' ? 'suspenso' : atual
         );
+
       }
     );
 
@@ -167,28 +215,35 @@ function ModoSuspenso({ modo, onEstadoChange }) {
 
   }, [modo, goingABC, goingBook]);
 
-  // Detectar término das animações de inicialização
+  // =================================
+  // FINAL DA INICIALIZAÇÃO
+  // =================================
+
   useEffect(() => {
 
     const subscriptionABC = wakingABC.addListener(
       'playToEnd',
       () => {
+
         if (modo !== 'quiz') return;
 
-        setEstado((atual) =>
+        setEstado(atual =>
           atual === 'acordando' ? 'ligado' : atual
         );
+
       }
     );
 
     const subscriptionBook = wakingBook.addListener(
       'playToEnd',
       () => {
+
         if (modo !== 'livro') return;
 
-        setEstado((atual) =>
+        setEstado(atual =>
           atual === 'acordando' ? 'ligado' : atual
         );
+
       }
     );
 
@@ -199,21 +254,33 @@ function ModoSuspenso({ modo, onEstadoChange }) {
 
   }, [modo, wakingABC, wakingBook]);
 
-  // Botão de desligar e acordar
+  // =================================
+  // BOTÃO DESLIGAR / ACORDAR
+  // =================================
+
   function pressionarDesligar() {
 
+    if (bloqueado) return;
+
     if (estado === 'ligado') {
+
       setEstado('dormindo');
       return;
+
     }
 
     if (estado === 'suspenso') {
+
       setEstado('acordando');
+
     }
 
   }
 
-  // Selecionar animação atual
+  // =================================
+  // PLAYER ATUAL
+  // =================================
+
   const playerAtual = estado === 'dormindo'
     ? playerGoing
     : estado === 'suspenso'
@@ -222,10 +289,14 @@ function ModoSuspenso({ modo, onEstadoChange }) {
         ? playerWaking
         : null;
 
-  // Computador funcionando normalmente
+  // =================================
+  // COMPUTADOR LIGADO
+  // =================================
+
   if (estado === 'ligado') {
 
     return (
+
       <View
         pointerEvents="box-none"
         style={Styles.penseBem}
@@ -233,16 +304,22 @@ function ModoSuspenso({ modo, onEstadoChange }) {
 
         <Pressable
           onPress={pressionarDesligar}
+          disabled={bloqueado}
           style={estiloBotaoDesligar}
         />
 
       </View>
+
     );
 
   }
 
-  // Computador desligando, dormindo ou acordando
+  // =================================
+  // COMPUTADOR SUSPENSO
+  // =================================
+
   return (
+
     <View
       pointerEvents="auto"
       style={Styles.penseBemDormindo}
@@ -257,14 +334,19 @@ function ModoSuspenso({ modo, onEstadoChange }) {
       />
 
       {estado === 'suspenso' && (
+
         <Pressable
           onPress={pressionarDesligar}
+          disabled={bloqueado}
           style={estiloBotaoAcordar}
         />
+
       )}
 
     </View>
+
   );
+
 }
 
 export default ModoSuspenso;
