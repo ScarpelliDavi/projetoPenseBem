@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View } from 'react-native';
 
 import ModoQuiz from './ModoQuiz';
@@ -12,6 +11,16 @@ function PenseBemJr() {
 
   // Controlar a visibilidade do modo atual
   const [computadorSuspenso, setComputadorSuspenso] = useState(false);
+
+  const estavaSuspenso = useRef(false);
+
+  useEffect(() => {
+    if (estavaSuspenso.current && !computadorSuspenso) {
+      setCodigoLivro(null);
+      setModo('quiz');
+    }
+    estavaSuspenso.current = computadorSuspenso;
+  }, [computadorSuspenso]);
 
   // Abrir modo de seleção de livro
   function abrirModoLivro() {
