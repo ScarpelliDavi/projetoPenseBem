@@ -9,7 +9,7 @@ const Pilha = createStackNavigator()
 const App = () => {
   return(
     <NavigationContainer>
-      <Pilha.Navigator initialRouteName="Início">
+      <Pilha.Navigator initialRouteName="Início" screenOptions={{ headerShown: false }}>
         <Pilha.Screen name="Início" component={ TelaInicial } />
         <Pilha.Screen name="TelaPergunta" component={ TelaPergunta } />
       </Pilha.Navigator>
