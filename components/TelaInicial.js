@@ -28,6 +28,7 @@ function TelaInicial() {
   const { width, height } = useWindowDimensions();
 
   const escala = Math.min(width / 320, height / 620, 1.5);
+  const ajusteCutscene = width / height < 0.75 ? 'cover' : 'contain';
 
   // =================================
   // ANIMAÇÃO DO BACKGROUND
@@ -397,13 +398,20 @@ function TelaInicial() {
         ]}
       >
 
-        <VideoView
-          player={playerCutscene}
-          style={styles.video}
-          contentFit="contain"
-          nativeControls={false}
-          allowsFullscreen={false}
+        <LinearGradient
+          colors={['#E1DAC7', '#B5B1A3']}
+          style={StyleSheet.absoluteFillObject}
         />
+
+        <View style={styles.videoCamada}>
+          <VideoView
+            player={playerCutscene}
+            style={styles.video}
+            contentFit={ajusteCutscene}
+            nativeControls={false}
+            allowsFullscreen={false}
+          />
+        </View>
 
       </View>
 
@@ -432,16 +440,24 @@ const styles = StyleSheet.create({
 
   cutscene: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#000000',
+    backgroundColor: '#B5B1A3',
     zIndex: 50,
     elevation: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
+  videoCamada: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+    zIndex: 1,
+  },
+
   video: {
     width: '100%',
-    aspectRatio: 720 / 1280,
+    height: '100%',
+    backgroundColor: 'transparent',
   },
 
   whiteOverlay: {
