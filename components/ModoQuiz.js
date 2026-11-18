@@ -332,7 +332,7 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
 
           {/* Contador de tentativas */}
           <Text style={Styles.contadorErros}>
-            {tentativas}/3
+            {tentativas + 1}
           </Text>
 
           {/* Pontuação acumulada */}

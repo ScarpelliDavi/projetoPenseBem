@@ -323,17 +323,65 @@ const Styles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
 
-  // Contador de erros
+  // Tentativa atual (1 dígito âmbar no visor)
   contadorErros: {
     position: 'absolute',
-    bottom: '10%',
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: 'bold',
+    top: 215,
+    left: -3,
+    width: 26,
+    height: 45,
+    fontFamily: 'Digital',
+    fontSize: 49,
+    textAlign: 'right',
+    color: '#FFC94D',
+    opacity: 0.6,
+    letterSpacing: 4,
     zIndex: 10,
-    backgroundColor: 'red',
   },
 
+  // Pontuação acumulada (últimos dígitos do visor)
+  pontuacao: {
+    position: 'absolute',
+    top: 215,
+    left: 19,
+    width: 83,
+    height: 45,
+    fontFamily: 'Digital',
+    fontSize: 49,
+    textAlign: 'right',
+    color: '#FF4D4D',
+    opacity: 0.5,
+    letterSpacing: 4,
+    zIndex: 10,
+  },
+
+  // Painel de fim de programa, sobre o teclado
+  quizContainer: {
+    position: 'absolute',
+    top: 372,
+    width: 190,
+    paddingVertical: 18,
+    alignItems: 'center',
+    backgroundColor: '#1B0E0F',
+    borderRadius: 12,
+    borderWidth: 3,
+    borderColor: '#3A3F4B',
+    zIndex: 20,
+  },
+
+  numeroPergunta: {
+    color: '#FFE7A3',
+    fontSize: 24,
+    fontWeight: 'bold',
+    letterSpacing: 2,
+  },
+
+  pontuacaoFinal: {
+    marginTop: 6,
+    color: '#FF4D4D',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
 
   titulo: {
     fontWeight: 'bold',
