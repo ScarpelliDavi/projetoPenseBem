@@ -1,10 +1,10 @@
-
 import React, { useEffect } from 'react';
 
 import {
   View,
   Image,
   StyleSheet,
+  useWindowDimensions,
 } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
@@ -21,6 +21,10 @@ import Styles from '../Styles';
 import PenseBemJr from './PenseBemJr';
 
 function TelaInicial() {
+
+  const { width, height } = useWindowDimensions();
+
+  const escala = Math.min(width / 320, height / 620, 1.5);
 
   const bgX = useSharedValue(0);
   const bgY = useSharedValue(0);
@@ -139,6 +143,7 @@ function TelaInicial() {
           <Image
             source={require('../assets/QMarkPatternBig.png')}
             style={Styles.pattern}
+            resizeMode="repeat"
           />
 
         </Animated.View>
@@ -146,22 +151,22 @@ function TelaInicial() {
       </View>
 
       {/* ==========================
-          3. LOGO
+          3. LOGO + 4. PENSEBEMJR (centralizados juntos)
       ========================== */}
 
-      <Image
-        source={require('../assets/Logo.png')}
-        style={Styles.logo}
-        resizeMode="contain"
-      />
+      <View style={[Styles.conjunto, { transform: [{ translateY: -12 * escala }, { scale: escala }] }]}>
 
-      {/* ==========================
-          4. PENSEBEMJR
-      ========================== */}
+        <Image
+          source={require('../assets/Logo.png')}
+          style={Styles.logo}
+          resizeMode="contain"
+        />
 
-      <Animated.View style={contentStyle}>
-        <PenseBemJr />
-      </Animated.View>
+        <Animated.View style={contentStyle}>
+          <PenseBemJr />
+        </Animated.View>
+
+      </View>
 
     </View>
 

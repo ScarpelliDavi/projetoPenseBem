@@ -4,10 +4,11 @@ const Styles = StyleSheet.create({
 
   principal: {
     flex: 2,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
     padding: 0,
     position: 'relative',
+    overflow: 'hidden',
     backgroundColor: '#f6b51d'
   },
 
@@ -21,9 +22,15 @@ const Styles = StyleSheet.create({
   },
 
   pattern: {
-    width: 1080,
-    height: 790,
+    width: '100%',
+    height: '100%',
     opacity: 0.07,
+  },
+
+  // Logo + aparelho: altura real do desenho, para poder centralizar
+  conjunto: {
+    height: 554,
+    alignItems: 'center',
   },
 
   logo: {
