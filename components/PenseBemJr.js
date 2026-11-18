@@ -10,6 +10,7 @@ import { View } from 'react-native';
 import ModoQuiz from './ModoQuiz';
 import ModoLivro from './ModoLivro';
 import ModoSuspenso from './ModoSuspenso';
+import ModoStart from './ModoStart';
 
 function PenseBemJr({
   onTransicaoIniciada,
@@ -21,13 +22,25 @@ function PenseBemJr({
   // ESTADOS PRINCIPAIS
   // =================================
 
-  const [modo, setModo] = useState('quiz');
+  // 'start' = tela inicial com o aparelho pequeno e o botão de play
+  const [modo, setModo] = useState('start');
 
   const [codigoLivro, setCodigoLivro] = useState(null);
   const [codigoPendente, setCodigoPendente] = useState(null);
 
   const [computadorSuspenso, setComputadorSuspenso] = useState(false);
   const [transicaoAtiva, setTransicaoAtiva] = useState(false);
+
+  // =================================
+  // SAIR DA TELA DE START
+  // =================================
+
+  const iniciarAparelho = useCallback(() => {
+
+    setCodigoLivro(null);
+    setModo('quiz');
+
+  }, []);
 
   // =================================
   // ABRIR MODO LIVRO
@@ -127,6 +140,14 @@ function PenseBemJr({
         }}
       >
 
+        {modo === 'start' && (
+
+          <ModoStart
+            onIniciar={iniciarAparelho}
+          />
+
+        )}
+
         {modo === 'quiz' && (
 
           <ModoQuiz
@@ -150,11 +171,17 @@ function PenseBemJr({
 
       {/* SISTEMA DE SUSPENSÃO */}
 
-      <ModoSuspenso
-        modo={modo}
-        onEstadoChange={atualizarSuspensao}
-        bloqueado={transicaoAtiva}
-      />
+      {/* Na tela de start o aparelho ainda está desligado: sem botão de liga/desliga */}
+
+      {modo !== 'start' && (
+
+        <ModoSuspenso
+          modo={modo}
+          onEstadoChange={atualizarSuspensao}
+          bloqueado={transicaoAtiva}
+        />
+
+      )}
 
     </View>
 

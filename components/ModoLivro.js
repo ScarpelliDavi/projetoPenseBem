@@ -1,11 +1,29 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, Image, Pressable, Text } from 'react-native';
+import { View, Image, Pressable, Text, Platform } from 'react-native';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import { useFonts } from 'expo-font';
 
 import Styles from '../Styles';
 import ListasPergunta from '../ListaPerguntas';
+
+// =================================
+// ANIMAÇÕES (iOS usa .mov; Android e web usam .webm)
+// =================================
+
+const isIOS = Platform.OS === 'ios';
+
+const animations = isIOS
+  ? {
+      bookFound: require('../assets/animations/iOS/BookFound.mov'),
+      bookToABC: require('../assets/animations/iOS/BooktoABC.mov'),
+      whatBook: require('../assets/animations/iOS/WhatBook.mov'),
+    }
+  : {
+      bookFound: require('../assets/animations/BookFound.webm'),
+      bookToABC: require('../assets/animations/BooktoABC.webm'),
+      whatBook: require('../assets/animations/WhatBook.webm'),
+    };
 
 function ModoLivro({
   onTransicaoIniciada,
@@ -36,7 +54,7 @@ function ModoLivro({
   // =================================
 
   const playerBookFound = useVideoPlayer(
-    require('../assets/animations/BookFound.webm'),
+    animations.bookFound,
     player => {
       player.loop = false;
       player.muted = false;
@@ -48,7 +66,7 @@ function ModoLivro({
   // =================================
 
   const playerBookToABC = useVideoPlayer(
-    require('../assets/animations/BooktoABC.webm'),
+    animations.bookToABC,
     player => {
       player.loop = false;
       player.muted = false;
@@ -60,7 +78,7 @@ function ModoLivro({
   // =================================
 
   const playerErro = useVideoPlayer(
-    require('../assets/animations/WhatBook.webm'),
+    animations.whatBook,
     player => {
       player.loop = false;
       player.muted = false;

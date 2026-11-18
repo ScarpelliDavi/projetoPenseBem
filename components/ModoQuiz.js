@@ -1,10 +1,30 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, Image, Pressable, Text } from 'react-native';
+import { View, Image, Pressable, Text, Platform } from 'react-native';
 import { VideoView, useVideoPlayer } from 'expo-video';
 
 import Styles from '../Styles';
 import ListasPergunta from '../ListaPerguntas';
+
+// =================================
+// ANIMAÇÕES (iOS usa .mov; Android e web usam .webm)
+// =================================
+
+const isIOS = Platform.OS === 'ios';
+
+const animations = isIOS
+  ? {
+      abcToBook: require('../assets/animations/iOS/ABCtoBook.mov'),
+      wrong: require('../assets/animations/iOS/WrongAnswer.mov'),
+      allWrong: require('../assets/animations/iOS/AllAnswersWrong.mov'),
+      right: require('../assets/animations/iOS/RightAnswer.mov'),
+    }
+  : {
+      abcToBook: require('../assets/animations/ABCtoBook.webm'),
+      wrong: require('../assets/animations/WrongAnswer.webm'),
+      allWrong: require('../assets/animations/AllAnswersWrong.webm'),
+      right: require('../assets/animations/RightAnswer.webm'),
+    };
 
 function ModoQuiz({ codigoLivro, onAbrirLivro }) {
 
@@ -18,7 +38,7 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
   const [quizFinalizado, setQuizFinalizado] = useState(false);
 
   const player = useVideoPlayer(
-    require('../assets/animations/ABCtoBook.webm'),
+    animations.abcToBook,
     player => {
       player.loop = false;
       player.muted = false;
@@ -26,7 +46,7 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
   );
 
   const playerWrong = useVideoPlayer(
-    require('../assets/animations/WrongAnswer.webm'),
+    animations.wrong,
     player => {
       player.loop = false;
       player.muted = false;
@@ -34,7 +54,7 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
   );
 
   const playerAllWrong = useVideoPlayer(
-    require('../assets/animations/AllAnswersWrong.webm'),
+    animations.allWrong,
     player => {
       player.loop = false;
       player.muted = false;
@@ -42,7 +62,7 @@ function ModoQuiz({ codigoLivro, onAbrirLivro }) {
   );
 
   const playerRight = useVideoPlayer(
-    require('../assets/animations/RightAnswer.webm'),
+    animations.right,
     player => {
       player.loop = false;
       player.muted = false;

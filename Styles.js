@@ -121,6 +121,17 @@ const Styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 
+  // Botão verde de "play" do aparelho pequeno (ModoStart)
+  startButton: {
+    position: 'absolute',
+    width: 63,
+    height: 62,
+    top: 338,
+    left: -25,
+    zIndex: 10,
+    backgroundColor: 'transparent',
+  },
+
   visorBook: {
     position: 'absolute',
     width: 84,
